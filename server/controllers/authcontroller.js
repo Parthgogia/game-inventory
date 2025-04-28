@@ -1,4 +1,5 @@
 import db from '../config/db.js'
+import jwt from 'jsonwebtoken';
 
 export async function register(req, res) {
   const { username, password, email, dob, age } = req.body;
@@ -27,7 +28,7 @@ export async function login(req, res) {
   const { username, password } = req.body;
   try {
     const { rows } = await db.query(
-      'SELECT Password FROM Player WHERE User_name = $1',
+      'SELECT User_name, Password FROM Player WHERE User_name = $1',
       [username]
     );
     if (!rows.length) {
@@ -36,13 +37,14 @@ export async function login(req, res) {
     if (rows[0].password !== password) {
       return res.status(401).send('Wrong password');
     }
-    const items = await db.query(
-      `SELECT * FROM Item_owned WHERE Owner_id =
-       (SELECT user_id FROM Player WHERE User_name = $1)`,
-      [username]
+    console.log(rows[0]);
+    
+    const token = jwt.sign(
+      {user_name: rows[0].user_name},
+      process.env.JWT_SECRET,
+      {expiresIn: '1h'}
     );
-    res.status(200).send("login successful")
-    // res.render('secrets', { items: items.rows });
+    res.json({token});
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
