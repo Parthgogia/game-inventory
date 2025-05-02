@@ -26,7 +26,7 @@ app.use(express.json());
 
 // app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/items',itemsRouter);
+app.use('/user',itemsRouter);
 
 app.listen(port, () =>
   console.log(`Server running at http://localhost:${port}`)
