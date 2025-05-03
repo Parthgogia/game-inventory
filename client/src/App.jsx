@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { Marketplace } from './pages/Marketplace';
 import { Profile } from './pages/Profile';
 import { Items } from './pages/Items';
+import { Transactions } from './pages/Transactions'; 
 
 export default function App() {
   const [view, setView] = useState('Home');
@@ -28,7 +29,8 @@ export default function App() {
   switch (view) {
     case 'Marketplace': Content = <Marketplace />; break;
     case 'Profile': Content = <Profile />; break;
-    case 'My Items': Content = <Items />; break;
+    case 'Inventory': Content = <Items />; break;
+    case 'Transactions': Content = <Transactions />; break; // Add this case
     default: Content = <Home />;
   }
 

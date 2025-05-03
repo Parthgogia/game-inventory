@@ -1,16 +1,21 @@
 import React from 'react';
 
-export function Navbar({ onSelect,onSignOut }) {
+
+export function Navbar({ onSelect, onSignOut }) {
   return (
     <nav className="navbar">
-      {['Home', 'Marketplace', 'Profile', 'My Items'].map(name => (
-        <button key={name} onClick={() => onSelect(name)}>
+      {['Home', 'Marketplace', 'Transactions', 'Profile', 'Inventory'].map(name => (
+        <button
+          key={name}
+          className="nav-item"
+          onClick={() => onSelect(name)}
+        >
           {name}
         </button>
       ))}
 
       <button
-        style={{ marginLeft: 'auto', backgroundColor: '#e74c3c', color: 'white' }}
+        className="nav-item sign-out-btn"
         onClick={onSignOut}
       >
         Sign Out

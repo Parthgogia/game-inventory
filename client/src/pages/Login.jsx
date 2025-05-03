@@ -27,27 +27,21 @@ export function Login({ onSuccess }) {
 
     try {
       if (isRegistering) {
-        // Registration
         await api.post('/auth/register', {
-          username: form.username,
-          password: form.password,
-          email:    form.email,
-          dob:      form.dob,
-          age:      parseInt(form.age, 10)
+          ...form,
+          age: parseInt(form.age, 10)
         });
       }
 
-      // Login (common to both flows)
       const res = await api.post('/auth/login', {
         username: form.username,
         password: form.password
       });
-      const { token } = res.data;
-      localStorage.setItem('token', token);
-      onSuccess();   // e.g. App.jsx will switch to Home view
+      
+      localStorage.setItem('token', res.data.token);
+      onSuccess();
     } catch (err) {
       console.error(err);
-      // show either backend message or generic fallback
       setError(
         err.response?.data?.message ||
         err.response?.data ||
@@ -57,101 +51,100 @@ export function Login({ onSuccess }) {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2>{isRegistering ? 'Register' : 'Login'}</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="auth-container">
+      <div className="auth-box">
+        <h2 className="auth-header">
+          {isRegistering ? 'REGISTER' : 'LOGIN'}
+        </h2>
+        {error && <p className="auth-error">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>
-            Username<br/>
-            <input
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              required
-            />
-          </label>
-        </div>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-input-group">
+            <label className="auth-label">
+              Username
+              <input
+                className="auth-input"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                required
+              />
+            </label>
+          </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label>
-            Password<br/>
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
-        </div>
+          <div className="auth-input-group">
+            <label className="auth-label">
+              Password
+              <input
+                className="auth-input"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+            </label>
+          </div>
 
-        {isRegistering && (
-          <>
-            <div style={{ marginBottom: '1rem' }}>
-              <label>
-                Email<br/>
-                <input
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-            <div style={{ marginBottom: '1rem' }}>
-              <label>
-                Date of Birth<br/>
-                <input
-                  name="dob"
-                  type="date"
-                  value={form.dob}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-            <div style={{ marginBottom: '1rem' }}>
-              <label>
-                Age<br/>
-                <input
-                  name="age"
-                  type="number"
-                  min="0"
-                  value={form.age}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-          </>
-        )}
+          {isRegistering && (
+            <>
+              <div className="auth-input-group">
+                <label className="auth-label">
+                  Email
+                  <input
+                    className="auth-input"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
 
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>
-          {isRegistering ? 'Register' : 'Login'}
-        </button>
-      </form>
+              <div className="auth-input-group">
+                <label className="auth-label">
+                  Date of Birth
+                  <input
+                    className="auth-input"
+                    name="dob"
+                    type="date"
+                    value={form.dob}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
 
-      <p style={{ marginTop: '1rem' }}>
-        {isRegistering
-          ? 'Already have an account? '
-          : "Don't have an account? "}
-        <button
-          onClick={toggleMode}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#61dafb',
-            textDecoration: 'underline',
-            cursor: 'pointer',
-            padding: 0
-          }}
-        >
-          {isRegistering ? 'Login here' : 'Register here'}
-        </button>
-      </p>
+              <div className="auth-input-group">
+                <label className="auth-label">
+                  Age
+                  <input
+                    className="auth-input"
+                    name="age"
+                    type="number"
+                    min="0"
+                    value={form.age}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+            </>
+          )}
+
+          <button className="auth-button" type="submit">
+            {isRegistering ? 'Register' : 'Login'}
+          </button>
+        </form>
+
+        <p className="auth-toggle">
+          {isRegistering ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <button className="auth-toggle-button" onClick={toggleMode}>
+            {isRegistering ? 'Login here' : 'Register here'}
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
