@@ -1,10 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 
+const SellModal = ({ item, onConfirm, onCancel }) => {
+  const [price, setPrice] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!price || isNaN(price) || price <= 0) {
+      setError('Please enter a valid price');
+      return;
+    }
+    onConfirm(price);
+  };
+
+  return (
+    <div className="sell-modal-overlay">
+      <div className="sell-modal">
+        <h3>Sell {item.item_name}</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-content">
+            <label>
+              Selling Price (UC):
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                  setError('');
+                }}
+                min="1"
+                className="price-input"
+                required
+              />
+            </label>
+            {error && <p className="error-message">{error}</p>}
+            <div className="modal-actions">
+              <button type="button" className="cancel-button" onClick={onCancel}>
+                Cancel
+              </button>
+              <button type="submit" className="confirm-button">
+                List Item
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export function Items() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showSellModal, setShowSellModal] = useState(false);
 
   useEffect(() => {
     api.get('user/itemsowned')
@@ -19,10 +70,23 @@ export function Items() {
       });
   }, []);
 
-  const handleSell = (item) => {
-    // Implement sell logic here
-    console.log('Selling item:', item);
-    // Add API call to move item to marketplace
+  const handleSellClick = (item) => {
+    setSelectedItem(item);
+    setShowSellModal(true);
+  };
+
+  const handleConfirmSell = async (price) => {
+    try {
+      await api.post('user/listItem', {
+        item_id: selectedItem.item_id,
+        selling_price: parseFloat(price)
+      });
+      setShowSellModal(false);
+      alert(`${selectedItem.item_name} listed in marketplace successfully!`);
+    } catch (err) {
+      console.error('Sell error:', err);
+      alert(err.response?.data?.message || 'Failed to list item for sale');
+    }
   };
 
   if (loading) return <div className="loading">Loading your items...</div>;
@@ -43,8 +107,8 @@ export function Items() {
             <div>Actions</div>
           </div>
           
-          {items.map((item, index) => (
-            <div className="item-row" key={index}>
+          {items.map((item) => (
+            <div className="item-row" key={item.item_id}>
               <div className="item-name">
                 {item.item_name}
               </div>
@@ -57,7 +121,7 @@ export function Items() {
               <div className="item-actions">
                 <button 
                   className="sell-button"
-                  onClick={() => handleSell(item)}
+                  onClick={() => handleSellClick(item)}
                 >
                   Sell Item
                 </button>
@@ -65,6 +129,14 @@ export function Items() {
             </div>
           ))}
         </div>
+      )}
+
+      {showSellModal && (
+        <SellModal
+          item={selectedItem}
+          onConfirm={handleConfirmSell}
+          onCancel={() => setShowSellModal(false)}
+        />
       )}
     </div>
   );

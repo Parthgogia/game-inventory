@@ -8,6 +8,7 @@ export async function getUserItems(req,res){
           SELECT
             li.Name  AS item_name,
             li.Type  AS item_type,
+            li.item_id AS item_id,
             li.Rarity AS item_rarity
           FROM
             Item_Owned io
@@ -168,3 +169,35 @@ export async function purchaseItem(req, res) {
   }
 }
 
+export async function listItemInMarketplace(req,res) {
+  const { selling_price, item_id } = req.body;
+  try {
+    const username = req.user.user_name;
+    const result = await db.query(
+      `SELECT user_id FROM PLAYER WHERE user_name = $1`,
+      [username]);  
+    const seller_id = result.rows[0].user_id   
+    console.log(seller_id,item_id,selling_price);    
+    await db.query(`
+    CALL list_item(
+      p_seller_id     => $1,
+      p_item_id       => $2,
+      p_selling_price => $3
+    );`,[seller_id,item_id,selling_price]);
+    res.json({ 
+      success: true,
+      message: 'Item listed in marketplace successfully'
+    });
+  } catch (error) {
+    console.error('Listing error:', error);
+    const errorMessage = error.message
+      .split('CONTEXT:')[0]  
+      .replace(/^ERROR: /, '')  
+      .trim();
+
+    res.status(500).json({
+      success: false,
+      message: errorMessage || 'Failed to complete purchase'
+    });
+  }
+}

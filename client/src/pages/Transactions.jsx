@@ -103,7 +103,7 @@ export function Transactions() {
                   <td>{formatDate(t.transaction_date)}</td>
                   <td>{t.item_name}</td>
                   <td>{t.buyer_name}</td>
-                  <td>UC {t.selling_price}</td>
+                  <td>{t.selling_price} UC</td>
                   <td className={`status ${t.status}`}>{t.status}</td>
                 </tr>
               ))}
