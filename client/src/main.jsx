@@ -14,8 +14,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './App.css';
 
-console.log("hello");
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 console.log(root);
 root.render(<App />);

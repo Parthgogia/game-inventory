@@ -19,4 +19,5 @@ router.post('/purchase', verifyUser, purchaseItem);
 
 router.post('/listItem', verifyUser, listItemInMarketplace);
 
+
 export default router;

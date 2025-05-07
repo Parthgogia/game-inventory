@@ -78,24 +78,24 @@ export async function getUserBuyTransactions(req,res) {
     const result = await db.query(
       `
       SELECT
-        t.t_id          AS transaction_id,
-        t.t_date        AS transaction_date,
-        pb.user_name    AS buyer_name,
-        ps.user_name    AS seller_name,
-        io.name         AS item_name,
-        t.selling_price AS selling_price,
-        t.status        AS status
+          t.t_id          AS transaction_id,
+          t.t_date        AS transaction_date,
+          pb.user_name    AS buyer_name,
+          ps.user_name    AS seller_name,
+          io.name         AS item_name,
+          t.selling_price AS selling_price,
+          t.status        AS status
       FROM
-        Transaction t
-        JOIN Player pb
-          ON t.buyer_id  = pb.user_id
-        JOIN Player ps
+          Transaction t
+      JOIN Player pb
+          ON t.buyer_id = pb.user_id
+      JOIN Player ps
           ON t.seller_id = ps.user_id
-        JOIN Item_Owned io
-          ON t.item_id   = io.item_id
+      JOIN Item_Owned io
+          ON t.item_id = io.item_id
+        AND t.buyer_id = io.owner_id
       WHERE
-        pb.user_name = $1
-      `,
+          pb.user_name = $1;`,
       [username]
     );
     return res.json(result.rows);
@@ -111,23 +111,25 @@ export async function getUserSellTransactions(req,res) {
     const result = await db.query(
       `
       SELECT
-        t.t_id          AS transaction_id,
-        t.t_date        AS transaction_date,
-        pb.user_name    AS buyer_name,
-        ps.user_name    AS seller_name,
-        io.name         AS item_name,
-        t.selling_price AS selling_price,
-        t.status        AS status
+          t.t_id          AS transaction_id,
+          t.t_date        AS transaction_date,
+          pb.user_name    AS buyer_name,
+          ps.user_name    AS seller_name,
+          io.name         AS item_name,
+          t.selling_price AS selling_price,
+          t.status        AS status
       FROM
-        Transaction t
-        JOIN Player pb
-          ON t.buyer_id  = pb.user_id
-        JOIN Player ps
+          Transaction t
+      JOIN Player pb
+          ON t.buyer_id = pb.user_id
+      JOIN Player ps
           ON t.seller_id = ps.user_id
-        JOIN Item_Owned io
+      JOIN Item_Owned io
           ON t.item_id   = io.item_id
+        AND t.buyer_id = io.owner_id
       WHERE
-        ps.user_name = $1
+          ps.user_name = $1;
+
       `,
       [username]
     );

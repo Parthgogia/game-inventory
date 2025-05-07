@@ -491,16 +491,6 @@ li { margin: 0.5rem 0; }
   border: 1px solid #ffd6d6;
 }
 
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.auth-input-group {
-  position: relative;
-}
-
 .auth-label {
   display: block;
   margin-bottom: 0.5rem;
@@ -509,15 +499,59 @@ li { margin: 0.5rem 0; }
   font-weight: 500;
 }
 
+.auth-input-group {
+  position: relative;
+  width: 95%; /* Reduced from full width */
+  margin: 0 auto; /* Center align */
+}
+
 .auth-input {
   width: 100%;
-  padding: 0.9rem;
+  padding: 0.9rem 1rem; /* More balanced horizontal padding */
   border: 2px solid #e0e0e0;
   border-radius: 10px;
   background: #fff;
   color: #333;
   font-size: 1rem;
   transition: all 0.2s ease;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center; /* Ensures all children center-aligned */
+}
+
+/* Custom Select Styles */
+.auth-select-wrapper {
+  position: relative;
+}
+
+.auth-select-wrapper::after {
+  content: "▼";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+  font-size: 0.8rem;
+}
+
+select.auth-input {
+  appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+select.auth-input:invalid {
+  color: #6c757d;
+}
+
+select.auth-input option {
+  color: #495057;
 }
 
 .auth-input:focus {
@@ -579,7 +613,16 @@ li { margin: 0.5rem 0; }
   }
   
   .auth-input {
-    padding: 0.8rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .auth-input-group {
+    width: 100%; /* Full width on mobile */
+    padding: 0 0.5rem; /* Add side padding */
+  }
+
+  .auth-select-wrapper::after {
+    right: 12px;
   }
 }
 
@@ -697,4 +740,365 @@ li { margin: 0.5rem 0; }
   .transactions-section h3 {
     font-size: 1.1rem;
   }
+}
+
+
+
+/* admin marketplace */
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.delete-button {
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.delete-button:hover {
+  background: #bb2d3b;
+}
+
+.commission-button {
+  background: #ffc107;
+  color: black;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.commission-button:hover {
+  background: #e0a800;
+}
+
+.rarity.common { color: #6c757d; }
+.rarity.rare { color: #007bff; }
+.rarity.epic { color: #6610f2; }
+.rarity.legendary { color: #dc3545; }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.commission-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.modal-content input {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-buttons button:first-child {
+  background: #7c3aed;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background: #6d28d9;
+}
+
+.modal-buttons button:last-child {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-buttons button:last-child:hover {
+  background: #e0e0e0;
+}
+
+.modal-error {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}
+
+
+
+
+/* Admin Listed Items Styles */
+/* .admin-listed-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+} */
+.admin-listed-container {
+  padding: 2rem;
+  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem 1rem;
+  background: white;
+  border-radius: 12px;
+}
+  
+.admin-items-header {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.admin-add-item-button {
+  background: #38a169;
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-add-item-button:hover {
+  background: #2f855d;
+  transform: translateY(-1px);
+}
+
+.admin-items-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-grid-header {
+  display: contents;
+}
+
+.admin-grid-header > div {
+  background-color: #34495e;
+  color: white;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.admin-item-row {
+  display: contents;
+}
+
+.admin-item-row > div {
+  padding: 1rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.admin-item-name {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.admin-item-type {
+  color: #7f8c8d;
+  text-transform: capitalize;
+}
+
+.admin-item-rarity {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.admin-item-price {
+  font-weight: 600;
+  color: #2a9d8f;
+}
+
+.admin-delete-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Rarity Colors */
+.admin-item-rarity.common { color: #27ae60; }
+.admin-item-rarity.uncommon { color: #2980b9; }
+.admin-item-rarity.rare { color: #9b59b6; }
+.admin-item-rarity.epic { color: #f1c40f; }
+.admin-item-rarity.legendary { color: #e67e22; }
+
+/* Modal Styles */
+.admin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-add-item-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-modal-content label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.admin-modal-content input,
+.admin-modal-content select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.admin-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.admin-confirm-button {
+  background: #38a169;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-cancel-button {
+  background: #e0e0e0;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-modal-error {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .admin-items-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-grid-header {
+    display: none;
+  }
+  
+  .admin-item-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-bottom: 1rem;
+    background-color: #f0f0f0;
+  }
+  
+  .admin-item-row > div {
+    grid-column: span 1;
+    background-color: white;
+    padding: 1rem;
+  }
+  
+  .admin-item-row > div::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-right: 0.5rem;
+    display: block;
+    font-size: 0.8rem;
+  }
+  
+  .admin-item-name { grid-column: 1 / -1; }
+  .admin-item-name::before { content: 'Name'; }
+  .admin-item-type::before { content: 'Type'; }
+  .admin-item-rarity::before { content: 'Rarity'; }
+  .admin-item-price::before { content: 'Price'; }
+  .admin-item-actions::before { content: 'Actions'; }
 }

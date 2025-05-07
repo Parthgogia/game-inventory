@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 
-export function Login({ onSuccess }) {
+export function Login({ onSuccess, onSetRole }) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [form, setForm] = useState({
     username: '',
     password: '',
     email: '',
     dob: '',
-    age: ''
+    age: '',
+    role: 'player'
   });
   const [error, setError] = useState('');
 
@@ -33,10 +34,21 @@ export function Login({ onSuccess }) {
         });
       }
 
-      const res = await api.post('/auth/login', {
-        username: form.username,
-        password: form.password
-      });
+      let res;
+      if(form.role=='player'){
+        console.log("logging in player");
+        res = await api.post('/auth/loginUser', {
+          username: form.username,
+          password: form.password
+        });
+        onSetRole('player');
+      }else{
+        res = await api.post('/auth/loginAdmin', {
+          username: form.username,
+          password: form.password
+        });
+        onSetRole('admin');
+      }
       
       localStorage.setItem('token', res.data.token);
       onSuccess();
@@ -86,6 +98,25 @@ export function Login({ onSuccess }) {
             </label>
           </div>
 
+          <div className="auth-input-group">
+            <label className="auth-label">
+              Select Role
+              <div className="auth-select-wrapper">
+                <select
+                  className="auth-input"
+                  name="role"
+                  value={form.role}
+                  onChange={handleChange}
+                  required
+                >
+                  {/* <option value="">Select Role</option> */}
+                  <option value="player">Player</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </label>
+          </div>
+
           {isRegistering && (
             <>
               <div className="auth-input-group">
@@ -116,20 +147,6 @@ export function Login({ onSuccess }) {
                 </label>
               </div>
 
-              <div className="auth-input-group">
-                <label className="auth-label">
-                  Age
-                  <input
-                    className="auth-input"
-                    name="age"
-                    type="number"
-                    min="0"
-                    value={form.age}
-                    onChange={handleChange}
-                    required
-                  />
-                </label>
-              </div>
             </>
           )}
 
