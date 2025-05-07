@@ -97,8 +97,8 @@ export function Login({ onSuccess, onSetRole }) {
               />
             </label>
           </div>
-
-          <div className="auth-input-group">
+          {!isRegistering && (
+            <div className="auth-input-group">
             <label className="auth-label">
               Select Role
               <div className="auth-select-wrapper">
@@ -116,6 +116,8 @@ export function Login({ onSuccess, onSetRole }) {
               </div>
             </label>
           </div>
+          )}
+          
 
           {isRegistering && (
             <>
