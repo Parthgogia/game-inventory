@@ -39,16 +39,14 @@ DB_NAME=game_inventory
 JWT_SECRET=your_jwt_secret
 ```
 
-
-
-### 5. Start the server
+### 4. Start the server
 ```bash
 cd server
 node app.js
 ```
 By default, the server runs on `http://localhost:3000\`. \
 
-### 6. Start the application
+### 5. Start the application
 ```bash
 cd client
 npm run dev
